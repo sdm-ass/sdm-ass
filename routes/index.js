@@ -1,7 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var crypto = require('crypto');
+<<<<<<< HEAD
 const mysql = require('./../database');
+=======
+var time = require('silly-datetime');
+const mysql = require('./../database');
+
+>>>>>>> add with input_happiness_level
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var query = 'SELECT * FROM article ORDER BY articleID DESC';
@@ -16,6 +22,41 @@ router.get('/', function(req, res, next) {
        res.render("index", {articles: articles,user:req.session.user});
     });
 });
+<<<<<<< HEAD
+=======
+
+router.get('/register',function(req,res,next){
+    res.render('register',{user:req.session.user});
+    
+    });
+    
+    router.get('/input_happiness_level',function(req,res,next){
+        
+        res.render('input_happiness_level',{user:req.session.user});
+        });
+
+    router.post('/register',function(req,res,next){
+    var name = req.body.name;
+    var password = req.body.password;
+    var hash = crypto.createHash('md5');
+    hash.update(password);
+    password = hash.digest('hex');
+    var query = 'INSERT author SET authorName=' + mysql.escape(name) + ',authorPassword=' + mysql.escape(password);
+    mysql.query(query, function(err, rows, fields) {
+       if(err) {
+           console.log(err);
+           return;
+       }
+       res.redirect('/login');
+    });
+    });
+    
+
+    router.get('/aside',function(req,res,next){
+        res.render('aside',{user:req.session.user});
+    })
+
+>>>>>>> add with input_happiness_level
 router.get('/login', function(req, res, next) {
   res.render('login', {message:'',user:req.session.user});
 });
@@ -29,6 +70,10 @@ router.post('/login', function(req, res, next) {
     hash.update(password);
     password = hash.digest('hex');
     var query = 'SELECT * FROM author WHERE authorName=' + mysql.escape(name) + ' AND authorPassword=' + mysql.escape(password);
+<<<<<<< HEAD
+=======
+   console.log(query);
+>>>>>>> add with input_happiness_level
     mysql.query(query, function(err, rows, fields) {
         if(err) {
             console.log(err);
@@ -36,12 +81,23 @@ router.post('/login', function(req, res, next) {
         }
         var user = rows[0];
         if(!user) {
+<<<<<<< HEAD
             res.render('login', {message:'用户名或者密码错误'});
             return;
         }
         req.session.user = user;
         res.redirect('/');
     });
+=======
+            res.render('login', {message:'The username or the password is wrong.'});
+            return;
+        }
+    
+    req.session.user = user;
+    res.redirect('/');
+    });
+
+>>>>>>> add with input_happiness_level
 });
 router.get('/articles/:articleID', function(req, res, next) {
    var articleID = req.params.articleID;
@@ -53,6 +109,10 @@ router.get('/articles/:articleID', function(req, res, next) {
       }
       var query = 'UPDATE article SET articleClick=articleClick+1 WHERE articleID=' + mysql.escape(articleID);
       var article = rows[0];
+<<<<<<< HEAD
+=======
+    
+>>>>>>> add with input_happiness_level
       mysql.query(query, function(err, rows, fields) {
          if(err) {
              console.log(err)
@@ -66,6 +126,7 @@ router.get('/articles/:articleID', function(req, res, next) {
       });
    });
 });
+<<<<<<< HEAD
 router.get('/edit', function(req, res, next) {
     var user = req.session.user;
     if(!user) {
@@ -87,6 +148,36 @@ router.post('/edit', function(req, res, next) {
        res.redirect('/');
     });
 });
+=======
+
+router.post('/input_happiness_level', function(req, res, next) {
+    var happiness_level = req.body.radio;
+    var author = req.session.user.authorName;
+    var group = req.session.user.group;
+    var role = req.session.user.role;
+    var submitTime = time.format(new Date(),'YYYY-MM-DD HH:mm:ss');
+  //  INSERT author VALUES(DEFAULT, 'node', 'e10adc3949ba59abbe56e057f20f883e')
+    var query = 'INSERT happiness_level VALUES(DEFAULT,'+mysql.escape(author)+','+mysql.escape(happiness_level)+','+mysql.escape(submitTime)+','+mysql.escape(group)+','+mysql.escape(role)+')';
+
+    //var  query = 'INSERT INTO happiness_level(authorName,happinesslevel,submitTime,group,role) VALUES('+mysql.escape(author) +','+ mysql.escape(happiness_level)+','+ mysql.escape(submitTime)+','+ mysql.escape(group) +','+mysql.escape(role) +')'; 
+    console.log(query);
+    mysql.query(query, function(err, rows, fields) {
+        if(err) {
+            console.log(err)
+            return;
+        }
+        var user = rows[0];
+        req.session.user = user;
+     });
+
+   
+   res.render('input_happiness_level',{user:req.session.user})
+   res.redirect('/');
+
+});
+
+
+>>>>>>> add with input_happiness_level
 router.get('/friends', function(req, res, next){
     res.render('friends', {user:req.session.user});
 });
@@ -94,6 +185,11 @@ router.get('/about', function(req, res, next) {
    res.render('about', {user:req.session.user});
 });
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> add with input_happiness_level
 //add router post
 router.post('/about', function (req, res, next) {
     var startDate = req.body.startDate;
